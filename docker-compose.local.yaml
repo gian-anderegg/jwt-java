@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: .docker/backend/Dockerfile
+    depends_on:
+      - mysql
+    restart:
+      always
+    networks:
+      - default
+    ports:
+      - 3000:3000
+
+  vue-app:
+    build:
+      context: .
+      dockerfile: .docker/frontend/build/Dockerfile
+    networks:
+      - default
+    ports:
+      - 8080:8080
+
+  mysql:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/apps/mysql:/var/lib/mysql
+    networks:
+      - default
+    environment:
+      - MYSQL_ROOT_PASSWORD=root1234
+      - MYSQL_PASSWORD=iet
+      - MYSQL_USER=iet
+      - MYSQL_DATABASE=testdb
+
+volumes:
+  db-data:
+
+networks:
+  default:
